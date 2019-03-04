@@ -7,6 +7,7 @@ class App {
 	protected $params = [];
 
 	public function __construct() {
+		session_start();
 		$url = $this->parseurl();
 
 		if(file_exists('../app/controllers/'. ucwords($url[0]). '.php')) {
