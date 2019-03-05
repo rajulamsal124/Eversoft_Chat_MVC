@@ -19,6 +19,7 @@ class UserModel extends Model{
 		/*$data2 = array('id'=> NULL, 'uname' => "dhpradip", 'pwd' => "myPass2", 'fname' => 'Pradip',
 				'lname' => "Dhakal", 'dob' => NULL, 'email'=>"dhpradip@gmail.com", 'phno' => "9856678594",
 				'age'=> 21, 'ubio' => "I am a programmer.");*/
+		//$this->registerUser($data2);
 	}
 
 	/**

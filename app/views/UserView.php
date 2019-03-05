@@ -9,7 +9,7 @@
 			$template = $this->model->template; 
 			$link = $this->model->data['link'];
 			$content = $this->model->data['content'];
-			echo include_once($template);
+			include_once($template);
 		}
 	}
 

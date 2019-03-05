@@ -7,4 +7,7 @@ require_once 'core/View.php';
 require_once 'core/Database.php';
 require_once 'core/Session.php';
 
+// require_once 'libs/Token.php';
+require_once 'libs/Validator.php';
+
 ?>
