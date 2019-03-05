@@ -7,7 +7,8 @@
 
 		public function render() {
 			$template = $this->model->template; 
-			$link = "user";
+			$link = $this->model->data['link'];
+			$content = $this->model->data['content'];
 			echo include_once($template);
 		}
 	}

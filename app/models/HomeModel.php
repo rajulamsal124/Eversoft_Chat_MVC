@@ -1,7 +1,8 @@
 <?php
 
-class HomeModel extends model{
+class HomeModel extends Model{
 	public function __construct() {
-		$this->template = 'home/index.php';
+		$this->template = 'home/dashboard.php';
+		$this->data = array('content' => "Hello from Dashboard", 'link' => 'user');
 	}
 }

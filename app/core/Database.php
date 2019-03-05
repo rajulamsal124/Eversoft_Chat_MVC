@@ -23,11 +23,6 @@ class Database {
 	//Parameters of SQL Query
 	private $parameters;
 	
-	//Arrays:
-	private $insertKeys = array();
-	private $insertValues = array();
-	private $updateSets = array();
-	
 
 	public $id;
 	
@@ -160,7 +155,7 @@ class Database {
         
         $rawStatement = explode(" ", preg_replace("/\s+|\t+|\n+/", " ", $query));
         
-        # Which SQL statement is used 
+        // Which SQL statement is used 
         $statement = strtolower($rawStatement[0]);
         
         if ($statement === 'select' || $statement === 'show') {
@@ -179,7 +174,7 @@ class Database {
      */
     public function lastInsertId()
     {
-        return $this->pdo->lastInsertId();
+        return $this->conn->lastInsertId();
     }
     
     /**
@@ -188,7 +183,7 @@ class Database {
      */
     public function beginTransaction()
     {
-        return $this->pdo->beginTransaction();
+        return $this->conn->beginTransaction();
     }
     
     /**
@@ -197,7 +192,7 @@ class Database {
      */
     public function executeTransaction()
     {
-        return $this->pdo->commit();
+        return $this->conn->commit();
     }
     
     /**
@@ -206,7 +201,7 @@ class Database {
      */
     public function rollBack()
     {
-        return $this->pdo->rollBack();
+        return $this->conn->rollBack();
     }
     
     /**

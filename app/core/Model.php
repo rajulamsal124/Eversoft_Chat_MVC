@@ -1,9 +1,17 @@
 <?php
-
+/*
+* Model class
+*/
 abstract class Model {
+	//template for the view
 	public $template;
+	// data for view
+	public $data;
+
 	private $db;
+	// array to hold information for SQL
 	protected $variables;
+	
 	protected $table;
 	protected $pk;
 
@@ -12,6 +20,7 @@ abstract class Model {
 	* Initialize the connection
 	*/
 	public function __construct() {
+		// connection with database
 		$this->db = new Database;
 	}
 
@@ -33,7 +42,11 @@ abstract class Model {
 		}
 	}
 
-
+	/**
+	* This method help to avoid error and get the value of field with variable name equals fieldname
+	* @param $name : string 
+	* eg. in childModel : $this->$id;
+	*/
 	public function __get($name) {
 		if(is_array($this->variables)) {
 			if(array_key_exists($name,$this->variables)) {
@@ -43,19 +56,28 @@ abstract class Model {
 		return null;
 	}
 
+	/**
+	* This method insert the data set from $variables to table in $table.
+	* @return last inserted id on success or 0 on failure.
+	*/
 	public function create() { 
 		$bindings = $this->variables;
 		if(!empty($bindings)) {
 			$fields =  array_keys($bindings);
 			$fieldsvals =  array(implode(",",$fields),":" . implode(",:",$fields));
 			$sql = "INSERT INTO ".$this->table." (".$fieldsvals[0].") VALUES (".$fieldsvals[1].")";
+			if($this->exec($sql) == 1) {
+				return $this->db->lastInsertId();
+			}
 		}
-		else {
-			$sql = "INSERT INTO ".$this->table." () VALUES ()";
-		}
-		return $this->exec($sql);
+		return 0;
 	}
 
+	/**
+	* This method update the data from $variables with help of pk (id)
+	* @param $id 
+	* @return number of affected rows
+	*/
 	public function update($id = "0") {
 		$this->variables[$this->pk] = (empty($this->variables[$this->pk])) ? $id : $this->variables[$this->pk];
 		$fieldsvals = '';
@@ -77,6 +99,11 @@ abstract class Model {
 		return null;
 	}
 
+	/**
+	* This method delete the data from $variables with help of pk (id)
+	* @param $id 
+	* @return number of affected rows
+	*/
 	public function delete($id = "") {
 		$id = (empty($this->variables[$this->pk])) ? $id : $this->variables[$this->pk];
 		if(!empty($id)) {
@@ -85,6 +112,11 @@ abstract class Model {
 		return $this->exec($sql, array($this->pk=>$id));
 	}
 
+	/**
+	* This method load the data to $variables with help of pk (id)
+	* @param $id 
+	* @return array of data
+	*/
 	public function load($id = "") {
 		$id = (empty($this->variables[$this->pk])) ? $id : $this->variables[$this->pk];
 		if(!empty($id)) {
@@ -95,16 +127,22 @@ abstract class Model {
 		}
 	}
 
-	public function getPK($data = array()) {
+
+	/**
+	* This method return the first Primary key with given conditions($data)
+	* @param $data
+	* @return pk
+	*/
+	public function getPk($data = array()) {
 		if(empty($data) && (empty($this->variables) || $this->variables[$this->pk] == null)) {
-			return -1;
+			return 0;
 		}
 		if(!empty($data)) {
 			$result = $this->search($data);
 			if(!empty($result)) {
 				return $result[0][$this->pk];
 			}else {
-				return -1;
+				return 0;
 			}
 		} else {
 			return $this->variables[$this->pk];
@@ -116,10 +154,8 @@ abstract class Model {
 	* @param array $sort.
 	* @return array of Collection.
 	* Example: $user = new User;
-	* $found_user_array = $user->search(array('sex' => 'Male', 'age' => '18'), array('dob' => 'DESC'));
-	* // Will produce: SELECT * FROM {$this->table_name} WHERE sex = :sex AND age = :age ORDER BY dob DESC;
-	* // And rest is binding those params with the Query. Which will return an array.
-	* // Now we can use for each on $found_user_array.
+	* $found_user_array = $user->search(array('uname' => 'Male', 'age' => '18'), array('dob' => 'DESC'));
+	* Will produce: SELECT * FROM {$this->table_name} WHERE sex = :sex AND age = :age ORDER BY dob DESC;
 	*/
 
 	public function search($fields = null, $sort = null) {
@@ -145,15 +181,33 @@ abstract class Model {
 		return $this->exec($sql, $bindings);
 	}
 
-	public function all(){
+	/**
+	* This method return whole table as array.
+	* @return whole table as array.  
+	*/
+	private function all(){
 		return $this->db->query("SELECT * FROM " . $this->table);
 	}
 
+	/**
+	* This method count number of datas in the field.
+	* @param $field : string eg. 'id'
+	* @return if field found number of data else 0;
+	*/
 	public function count($field)  {
 		if($field)
-		return $this->db->single("SELECT count(" . $field . ")" . " FROM " . $this->table);
+			return $this->db->single("SELECT count(" . $field . ")" . " FROM " . $this->table);
+		else 
+			return 0;
 	}	
 	
+	/**
+	* This method is used in this class to execute query.
+	* @param $sql : string -> SQL command
+	* @param $array : array -> Array with variables to bind 
+	* @return returns number of affected rows for UPDATE, INSERT and DELETE
+	* @return returns array (mode : ASSOC) for SELECT and SHOW
+	*/
 	private function exec($sql, $array = null) {
 		
 		if($array !== null) {
