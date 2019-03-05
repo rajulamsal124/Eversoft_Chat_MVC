@@ -45,11 +45,6 @@ class Validator {
                                     $this->addError("{$item} should be numeric value.");
                                 }
                             }
-                            else if($rule_value == 'PHNumber') {
-                                // if(!preg_match('/^+[0-9]{5}+$/', $source[$item])) {
-                                //     $this->addError("{$item} field is invalid.");
-                                // }
-                            }
                             else if($rule_value == 'date') {
                                 // validate date
                             // $test_arr  = explode('/', $source[$item]);

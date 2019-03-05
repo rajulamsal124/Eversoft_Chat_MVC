@@ -6,9 +6,7 @@
 		}
 
 		public function render() {
-			$template = $this->model->template; 
-			$link = $this->model->data['link'];
-			$content = $this->model->data['content'];
+			$template = $this->model->template;
 			include_once($template);
 		}
 	}

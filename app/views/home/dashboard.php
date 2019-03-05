@@ -4,7 +4,7 @@
 	<title>Home</title>
 </head>
 <body>
-	<?= $content ?> 
-	<a href = <?= $link ?>> <?= $link ?> </a>
+	<?= $this->content ?> 
+	<a href = <?= $this->link ?>> <?= $this->link ?> </a>
 </body>
 </html>
